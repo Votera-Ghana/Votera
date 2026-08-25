@@ -2,27 +2,40 @@
 
 > **Your Voice. Your Choice.**
 
-Votera is a modern digital voting platform designed to make elections **simple, secure, transparent, and accessible**.
+Votera is a modern digital voting platform designed to make elections **simple, accessible, transparent, and reliable**.
 
-The platform is being developed to support organizations, universities, schools, clubs, associations, and other institutions that need a reliable way to create, manage, and participate in elections.
+The platform is being developed for organizations, universities, schools, clubs, associations, competitions, and other institutions that need a flexible way to create, manage, and participate in elections.
+
+Votera supports both traditional election workflows and **paid voting**, where voters can purchase multiple votes for a candidate or nominee.
 
 ---
 
 ## 🚀 Project Status
 
-**Current Stage:** Documentation & Foundation
+**Current Stage:** Development
 
 **Current Release:** `v0.0.0`
 
-Votera is currently in the planning and documentation stage. Core web development will begin after the initial product, requirements, architecture, database, API, and security documentation have been established.
+Votera has completed its initial documentation and engineering foundation. The project is now moving into the first development milestone for the MVP.
+
+### Current Foundation
+
+* Repository initialized
+* Git workflow established
+* Project documentation established
+* React + Vite frontend initialized
+* FastAPI backend initialized
+* Supabase integration initialized
+* GitHub Actions CI configured
+* Development milestones and issues established
 
 ---
 
-## 🎯 Vision
+# 🎯 Vision
 
-The vision of Votera is to provide a reliable digital voting platform where organizations can conduct elections without relying on complicated manual processes.
+The vision of Votera is to provide a reliable digital voting platform that makes it easy for organizations and event organizers to create elections and for participants to cast votes.
 
-Votera aims to make the entire election lifecycle easier to manage:
+Votera aims to simplify the election lifecycle:
 
 ```text
 Create Election
@@ -31,183 +44,461 @@ Add Positions
        ↓
 Add Candidates
        ↓
-Register/Manage Voters
+Configure Voting Rules
        ↓
-Open Election
+Publish Election
        ↓
-Cast Votes
+Voters Select Candidates
+       ↓
+Select Number of Votes
+       ↓
+Payment (where applicable)
+       ↓
+Payment Verification
+       ↓
+Record Votes
+       ↓
+Update Results
        ↓
 Close Election
-       ↓
-Calculate Results
        ↓
 Publish Results
 ```
 
 ---
 
-## ✨ Planned Features
+# 🗳️ Voting Model
 
-### 👤 Voter
+Unlike a traditional one-person-one-vote system, Votera can support **paid voting**, where a participant may purchase multiple votes.
 
-* Account registration and login
-* Voter verification
+For example:
+
+```text
+Candidate: Jane Doe
+
+Number of Votes: 50
+Price Per Vote: GH₵1
+
+Total Payment: GH₵50
+```
+
+After successful payment verification, the backend records the purchased votes.
+
+### Important principles
+
+* Voters do **not** need to create an account to vote.
+* Voters do **not** need to log in to cast votes.
+* Multiple voting transactions are allowed.
+* A voter may purchase multiple votes.
+* The backend determines the final vote quantity.
+* Votes are only credited after successful payment verification where payment is required.
+* The frontend must never be trusted to determine whether a payment succeeded.
+
+This model allows Votera to support competitions, award voting, entertainment voting, fundraising-style voting, and other scenarios where votes have monetary value.
+
+---
+
+# 👤 Voter Experience
+
+Voters should be able to participate without creating an account.
+
+The basic voting flow is:
+
+```text
+Open Election
+      ↓
+View Candidates
+      ↓
+Select Candidate
+      ↓
+Select Number of Votes
+      ↓
+View Total Amount
+      ↓
+Proceed to Payment
+      ↓
+Payment Verification
+      ↓
+Votes Recorded
+      ↓
+Voting Confirmation
+```
+
+### Voter Features
+
 * View available elections
-* View election details
-* View candidates and positions
-* Cast votes
-* Prevent duplicate voting
+* View election information
+* View positions
+* View candidates
+* View candidate information
+* Select candidates
+* Select number of votes
+* View calculated voting cost
+* Complete payment where required
 * Receive voting confirmation
-* View eligible election results
+* View available results
 
-### 🛠️ Election Administrator
+No voter registration or voter login is required for the basic voting experience.
+
+---
+
+# 🛠️ Election Administrator
+
+Election administrators require authenticated access to manage their elections.
+
+### Features
 
 * Create elections
 * Configure election dates
 * Create positions
-* Add and manage candidates
-* Manage eligible voters
-* Open and close elections
-* Monitor election participation
-* View election results
+* Add candidates
+* Edit candidate information
+* Configure voting prices
+* Open elections
+* Close elections
+* Monitor election activity
+* View transactions
+* View results
 * Manage election settings
 
-### 👑 System Administrator
+Administrative functionality will be protected by authentication and role-based authorization.
 
-* Manage platform users
+---
+
+# 👑 System Administrator
+
+The system administrator manages the Votera platform itself.
+
+Potential responsibilities include:
+
 * Manage organizations
-* Manage election administrators
-* Monitor system activity
+* Manage organization administrators
+* Monitor platform activity
 * Review audit logs
-* Manage platform-level settings
+* Manage platform settings
+* Monitor system health
+* Manage platform-level configuration
 
-### 📊 Results & Analytics
+System administrator functionality is outside the basic public voting flow and will be introduced incrementally.
 
-* Vote counting
-* Candidate results
-* Position results
-* Election turnout
-* Winner determination
-* Election statistics
+---
 
-### 🔐 Security
+# 💳 Paid Voting & Payments
 
-* Authentication
-* Role-based authorization
-* Input validation
-* Duplicate-vote prevention
-* Secure API design
-* Rate limiting
-* Audit logging
-* Secure payment verification
+Payment is a core component of Votera's paid voting model.
 
-### 📧 Communication
+The initial payment provider is:
 
-* Email notifications
-* OTP emails
-* Election invitations
+**Paystack**
+
+Potential payment flow:
+
+```text
+Voter
+  ↓
+Select Candidate
+  ↓
+Select Vote Quantity
+  ↓
+FastAPI Calculates Amount
+  ↓
+Payment Initialization
+  ↓
+Paystack
+  ↓
+Payment Completed
+  ↓
+Paystack Webhook
+  ↓
+FastAPI Verifies Transaction
+  ↓
+Record Votes
+  ↓
+Update Results
+  ↓
+Confirmation
+```
+
+### Important Security Rule
+
+Votera will **never trust the frontend alone** to confirm a successful payment.
+
+The backend will verify payment status before votes are credited.
+
+For example:
+
+```text
+Frontend says:
+"Payment successful"
+
+        ↓
+
+Backend verifies with Paystack
+
+        ↓
+
+Payment actually successful?
+        │
+    ┌───┴───┐
+   YES      NO
+    │        │
+    ▼        ▼
+Credit     Reject
+votes      transaction
+```
+
+This prevents users from manipulating frontend requests to obtain votes without completing payment.
+
+---
+
+# 📧 Email
+
+Votera will use **Resend** for transactional email functionality.
+
+Potential uses include:
+
+* Administrative emails
+* Election notifications
+* Payment-related notifications
 * Voting confirmations
 * Election reminders
+* Future account/admin notifications
 
-### 📱 SMS
-
-Planned SMS functionality includes:
-
-* OTP verification
-* Vote confirmation
-* Election reminders
-* Important election notifications
+Email functionality will be introduced incrementally.
 
 ---
 
-## 💳 Payments
+# 📱 SMS
 
-Votera will use **Paystack** for payment processing where paid services are required.
+Votera will use **Hubtel** for SMS functionality.
 
-Potential use cases include:
+Potential uses include:
 
-* Election packages
-* Organization subscriptions
-* Paid election services
+* Voting confirmations
+* Payment confirmations
+* Election notifications
+* Important election alerts
+* Future OTP functionality where required
 
-Payment status will be verified through the backend rather than trusting frontend payment responses.
+SMS functionality is planned for a later release.
 
 ---
 
-## 🧱 Technology Stack
+# 🧱 Technology Stack
 
-### Frontend
+## Frontend
 
 * React.js
 * Vite
 * HTML
 * CSS
+* JavaScript
 
-### Backend
+Votera will use **normal CSS rather than Tailwind CSS** to keep the frontend maintainable and aligned with the team's current skill set.
+
+---
+
+## Backend
 
 * Python
 * FastAPI
 
-### Database
+FastAPI will handle:
+
+* API endpoints
+* Business logic
+* Vote processing
+* Payment verification
+* Transaction processing
+* Administrative authorization
+* Integration with external services
+
+---
+
+## Database
 
 * Supabase
 * PostgreSQL
 
-### Email
-
-* Resend
-
-### Payment
-
-* Paystack
-
-### SMS
-
-* Hubtel
-
-### Future/Optional Technologies
-
-* Redis
-* USSD integration
-* Background workers
-* Advanced analytics
+Supabase will provide the primary PostgreSQL database and related backend infrastructure.
 
 ---
 
-## 🏗️ High-Level Architecture
+## Email
+
+* Resend
+
+---
+
+## Payment
+
+* Paystack
+
+---
+
+## SMS
+
+* Hubtel
+
+---
+
+## Future / Optional Technologies
+
+The following technologies may be introduced when the system requires them:
+
+* Redis
+* Background workers
+* USSD
+* Queues
+* Advanced analytics
+* Additional payment providers
+* Additional SMS providers
+
+---
+
+# 🏗️ High-Level Architecture
 
 ```text
-                    VOTERA
-                       │
-                       ▼
-              ┌─────────────────┐
-              │  React + Vite   │
-              │    Frontend     │
-              └────────┬────────┘
-                       │
-                    HTTP/API
-                       │
-                       ▼
-              ┌─────────────────┐
-              │     FastAPI     │
-              │     Backend     │
-              └────────┬────────┘
-                       │
-            ┌──────────┼──────────┐
-            │          │          │
-            ▼          ▼          ▼
-       Supabase     Resend     Paystack
-       PostgreSQL    Email      Payments
-                                  │
-                                  │
-                                  ▼
-                               Hubtel
-                                SMS
+                         VOTERA
+                            │
+            ┌───────────────┴───────────────┐
+            │                               │
+            ▼                               ▼
+      PUBLIC VOTING                    ADMIN PORTAL
+            │                               │
+            ▼                               ▼
+      React + Vite                    React + Vite
+            │                               │
+            └───────────────┬───────────────┘
+                            │
+                         HTTP/API
+                            │
+                            ▼
+                    ┌──────────────┐
+                    │   FastAPI    │
+                    │   Backend    │
+                    └──────┬───────┘
+                           │
+              ┌────────────┼────────────┐
+              │            │            │
+              ▼            ▼            ▼
+          Supabase       Paystack     Resend
+          PostgreSQL     Payments      Email
+                           │
+                           ▼
+                         Hubtel
+                           SMS
 ```
 
 ---
 
-## 📁 Project Structure
+# 🔐 Authentication Architecture
+
+Voters do **not** require accounts or login for the public voting experience.
+
+Authentication is primarily required for administrative functionality.
+
+```text
+PUBLIC VOTER
+
+Voter
+  ↓
+Public Election
+  ↓
+Select Candidate
+  ↓
+Purchase Votes
+  ↓
+Payment
+  ↓
+Vote Recorded
+```
+
+Administrative users follow a protected flow:
+
+```text
+Administrator
+      ↓
+Login
+      ↓
+Authentication
+      ↓
+Role Verification
+      ↓
+Admin Dashboard
+      ↓
+Manage Elections
+```
+
+The system will use authentication and role-based authorization to protect administrative resources.
+
+---
+
+# 🔒 Security Principles
+
+Security is a core requirement of Votera.
+
+The system will prioritize:
+
+1. Vote integrity
+2. Payment verification
+3. Administrative authentication
+4. Role-based authorization
+5. Input validation
+6. Secure API design
+7. Transaction integrity
+8. Auditability
+9. Protection of sensitive information
+10. Secure handling of external service credentials
+
+### Payment Security
+
+Votes must not be credited simply because the frontend reports that a payment succeeded.
+
+The backend must verify the transaction before recording paid votes.
+
+### Vote Integrity
+
+The system must ensure that:
+
+```text
+Payment confirmed
+       ↓
+Transaction validated
+       ↓
+Votes recorded
+```
+
+rather than:
+
+```text
+Frontend request
+       ↓
+Votes immediately added
+       ❌
+```
+
+---
+
+# 📊 Results & Analytics
+
+Votera will provide basic election results during the MVP.
+
+Potential functionality includes:
+
+* Candidate vote counts
+* Position results
+* Election totals
+* Vote rankings
+* Winner determination
+* Basic election statistics
+* Paid vote transaction summaries
+
+Advanced analytics will be introduced in later releases.
+
+---
+
+# 📁 Project Structure
 
 ```text
 votera/
@@ -215,6 +506,10 @@ votera/
 ├── README.md
 ├── LICENSE
 ├── .gitignore
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 │
 ├── docs/
 │   ├── product/
@@ -231,161 +526,192 @@ votera/
 └── backend/
 ```
 
-The documentation directory will contain the specifications and technical decisions that guide development.
+The `docs/` directory contains the specifications and technical decisions that guide development.
 
 ---
 
-## 🗺️ Development Roadmap
+# 🗺️ Development Roadmap
 
 Votera will be developed incrementally through multiple releases.
 
-### Phase 0 — Foundation
+---
+
+## Phase 0 — Foundation
 
 **Release:** `v0.0.0`
 
+### Completed / Established
+
 * Repository initialization
-* Product documentation
+* Project documentation
 * Requirements documentation
 * Architecture documentation
-* Database design
+* Initial database planning
 * API planning
 * Security planning
-* Development workflow
+* Git workflow
+* GitHub Issues and Milestones
+* Initial CI workflow
+* React frontend initialization
+* FastAPI backend initialization
+* Supabase backend configuration
 
-**Status:** 🔄 In Progress
+**Status:** 🟢 Complete
 
 ---
 
-### Phase 1 — MVP
+# Phase 1 — MVP
 
 **Release:** `v0.1.0`
 
-Core voting functionality:
+The first MVP will focus on the core election and paid voting experience.
 
-* Authentication
-* User roles
-* Election management
+### Core Features
+
+* Election creation
+* Election configuration
+* Position management
 * Candidate management
-* Voter eligibility
-* Voting
-* Duplicate-vote prevention
+* Public election pages
+* Candidate selection
+* Vote quantity selection
+* Vote price calculation
+* Payment initialization
+* Payment verification
+* Vote recording
 * Basic results
-* Admin dashboard
+* Basic admin dashboard
+* Administrative authentication
+* Role-based authorization
 
-**Status:** ⏳ Planned
+### Voter Experience
+
+No voter registration or login is required.
+
+```text
+Election
+   ↓
+Candidate
+   ↓
+Vote Quantity
+   ↓
+Payment
+   ↓
+Verification
+   ↓
+Votes Recorded
+   ↓
+Confirmation
+```
+
+**Status:** 🟡 In Development
 
 ---
 
-### Phase 2 — Communication
+# Phase 2 — Communication
 
 **Release:** `v0.2.0`
 
-* Resend email integration
-* Hubtel SMS integration
-* OTP
+* Resend integration
+* Hubtel integration
 * Voting confirmations
+* Payment notifications
 * Election notifications
+* Election reminders
+* SMS notifications
 
 **Status:** ⏳ Planned
 
 ---
 
-### Phase 3 — Payments
+# Phase 3 — Advanced Payments
 
 **Release:** `v0.3.0`
 
-* Paystack integration
+* Improved Paystack integration
 * Payment initialization
 * Payment verification
-* Webhooks
+* Webhook processing
 * Transaction records
+* Payment reconciliation
+* Failed payment handling
+* Payment history
 
 **Status:** ⏳ Planned
 
 ---
 
-### Phase 4 — Advanced Election Management
+# Phase 4 — Advanced Election Management
 
 **Release:** `v0.4.0`
 
 Potential features:
 
 * Advanced election configuration
-* Improved voter management
-* Election analytics
-* Advanced results
-* Audit logs
 * Improved administration tools
+* Organization management
+* Advanced voter/election participation controls
+* Advanced results
+* Election analytics
+* Audit logs
+* Reporting
 
 **Status:** ⏳ Planned
 
 ---
 
-### Phase 5 — Production Release
+# Phase 5 — Production Release
 
 **Release:** `v1.0.0`
 
 Focus areas:
 
 * Security hardening
-* Performance
-* Testing
+* Performance optimization
+* Comprehensive testing
 * Accessibility
 * Responsive design
-* Deployment
+* Production deployment
 * Monitoring
+* Logging
+* Error tracking
+* Backup and recovery
 * Production configuration
 
 **Status:** ⏳ Planned
 
 ---
 
-## 🔮 Future Possibilities
+# 🔮 Future Possibilities
 
 The following features may be introduced after the initial releases:
 
 * USSD voting
-* Redis-based caching and queues
+* Redis caching
+* Background workers
+* Queue-based processing
 * Advanced analytics
 * Multi-organization support
 * Advanced election reporting
 * Additional payment providers
 * Additional SMS providers
 * Mobile application
+* More advanced voting models
 
 These features are intentionally outside the initial MVP scope.
 
 ---
 
-## 🔐 Security Principles
-
-Security is a core requirement of Votera.
-
-The system will prioritize:
-
-1. Authentication
-2. Authorization
-3. Vote integrity
-4. Duplicate-vote prevention
-5. Data validation
-6. Secure API communication
-7. Payment verification
-8. Auditability
-9. Protection of sensitive information
-10. Ballot secrecy where applicable
-
-The implementation will be designed so that administrative records and audit information do not unnecessarily expose individual voters' choices.
-
----
-
-## 🧪 Development Approach
+# 🧪 Development Approach
 
 Votera will be developed incrementally.
 
-Each meaningful feature should go through:
+Every meaningful feature should follow:
 
 ```text
 Requirement
+    ↓
+Issue
     ↓
 Design
     ↓
@@ -393,52 +719,144 @@ Implementation
     ↓
 Testing
     ↓
-Review
+Pull Request
     ↓
-Commit
+Code Review
+    ↓
+CI
+    ↓
+Merge
     ↓
 Release
 ```
 
-Git will be used to maintain a clear development history.
+Both developers will work through feature branches and pull requests.
+
+### Team
+
+**Joseph Amuasi**
+
+* Backend development
+* API development
+* Database integration
+* Security
+* Payment integration
+* System architecture
+
+**Roland**
+
+* Frontend development
+* UI implementation
+* User experience
+* Frontend integration
+* Testing
+* Code review
+
+Responsibilities may change between milestones so both developers gain experience across the system.
 
 ---
 
-## 📦 Versioning
+# 🌿 Git Workflow
 
-Votera will use semantic versioning.
+Votera uses feature branches rather than developing directly on `main`.
+
+Example:
+
+```text
+main
+ │
+ ├── feature/election-management
+ │
+ ├── feature/voting-flow
+ │
+ ├── feature/payment-integration
+ │
+ └── feature/results
+```
+
+The expected workflow is:
+
+```text
+Create Issue
+     ↓
+Create Feature Branch
+     ↓
+Implement
+     ↓
+Test
+     ↓
+Commit
+     ↓
+Push
+     ↓
+Open Pull Request
+     ↓
+Code Review
+     ↓
+CI
+     ↓
+Merge
+```
+
+---
+
+# 📦 Versioning
+
+Votera follows semantic versioning.
 
 Examples:
 
 ```text
+v0.0.0
 v0.1.0
 v0.1.1
 v0.2.0
 v1.0.0
 ```
 
-Major releases represent significant product milestones, while minor releases and patches represent incremental functionality and fixes.
+Major releases represent significant product milestones.
+
+Minor releases introduce new functionality.
+
+Patch releases contain fixes and small improvements.
 
 ---
 
-## 🤝 Development Philosophy
+# 🤝 Development Philosophy
 
 Votera is being built with the goal of creating a system that is:
 
-* **Simple** — easy to understand and use
-* **Secure** — protects voters and election data
-* **Reliable** — produces trustworthy results
-* **Scalable** — capable of growing with demand
-* **Maintainable** — organized and documented
-* **Accessible** — usable across different devices and users
+### Simple
+
+Easy for voters and administrators to understand.
+
+### Secure
+
+Protects election data, transactions, and administrative functionality.
+
+### Reliable
+
+Produces trustworthy voting and payment records.
+
+### Scalable
+
+Capable of handling increasing numbers of elections and voting transactions.
+
+### Maintainable
+
+Uses clean architecture, documentation, testing, and version control.
+
+### Accessible
+
+Works across different devices and provides a straightforward voting experience.
 
 ---
 
-## 📄 Documentation
+# 📄 Documentation
 
-Detailed project documentation will be maintained under the `docs/` directory.
+Detailed project documentation is maintained under the `docs/` directory.
 
-Documentation will cover:
+Documentation covers:
 
 * Product requirements
 * User roles
@@ -448,17 +866,25 @@ Documentation will cover:
 * Database design
 * API design
 * Security
-* Integrations
+* Payment integration
+* SMS integration
+* Email integration
 * Testing
 * Development workflow
 * Release management
 
 ---
 
-## 📜 License
+# 📜 License
 
-This project is currently under development. Licensing details will be finalized before public production release.
+This project is currently under development.
+
+Licensing details will be finalized before public production release.
 
 ---
 
-**Votera — Your Voice. Your Choice.**
+# 🗳️ Votera
+
+> **Your Voice. Your Choice.**
+
+Built with ❤️ by the Votera development team.
