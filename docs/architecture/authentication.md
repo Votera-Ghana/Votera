@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-Votera uses Supabase Auth for user identity and authentication while FastAPI provides the application API and authorization layer.
+Votera uses Supabase Auth for administrator identity and authentication while FastAPI provides the application API and authorization layer. Voters do not create accounts or log in.
 
 The React frontend communicates with Supabase Auth for authentication and with the FastAPI backend for Votera application functionality.
 
@@ -15,16 +15,6 @@ The React frontend communicates with Supabase Auth for authentication and with t
 - Email: Resend
 
 ## 3. User Roles
-
-### Voter
-
-A voter can:
-
-- Access elections they are eligible for.
-- View election information.
-- View candidates.
-- Cast votes.
-- Receive voting confirmation.
 
 ### Organization Admin
 
@@ -39,19 +29,17 @@ An organization admin can:
 
 ## 4. Registration
 
-Public registration creates a standard voter account.
-
-Organization administrator accounts are not created through unrestricted public registration. Administrator access must be granted through an authorized administrative process.
+Organization administrator accounts are not created through unrestricted public registration. Administrator access must be granted through an authorized administrative process. Voters are identified and authorized through election eligibility, not an authenticated account.
 
 ## 5. Authentication Flow
 
-1. User submits authentication information through the React frontend.
+1. An administrator submits authentication information through the React frontend.
 2. Supabase Auth validates the authentication request.
 3. Supabase creates and manages the authentication session.
 4. React maintains the authenticated state.
 5. Authenticated requests to FastAPI include the user's authentication credentials.
 6. FastAPI verifies the authenticated identity.
-7. FastAPI determines the user's Votera role.
+7. FastAPI reads the administrator's role and active status from the `users` table.
 8. FastAPI allows or rejects access based on authorization rules.
 
 ## 6. Authorization
@@ -69,7 +57,6 @@ Examples of protected operations include:
 - Election management.
 - Candidate management.
 - Voter management.
-- Voting.
 - Results management.
 
 ## 8. Security Principles
