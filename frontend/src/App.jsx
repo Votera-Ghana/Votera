@@ -1,20 +1,7 @@
-import "./App.css";
+import Home from "./pages/Home";
 
 function App() {
-  return (
-    <main className="app">
-      <section className="app-placeholder">
-        <p className="app-eyebrow">VOTERA</p>
-
-        <h1>Your Voice. Your Choice.</h1>
-
-        <p>
-          A modern digital voting platform built for simple, transparent,
-          and accessible elections.
-        </p>
-      </section>
-    </main>
-  );
+  return <Home />;
 }
 
 export default App;
