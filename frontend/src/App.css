@@ -1,20 +1,43 @@
+#root {
+  min-height: 100vh;
+}
+
 .app {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 2rem;
+}
+
+.app-placeholder {
+  width: min(680px, 100%);
+  padding: 3rem;
   text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
-.app h1 {
+.app-eyebrow {
+  margin: 0 0 1rem;
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.app-placeholder h1 {
   margin: 0;
-  font-size: 4rem;
-  letter-spacing: 0.08em;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.1;
 }
 
-.app p {
-  margin-top: 0.75rem;
-  font-size: 1.1rem;
-  letter-spacing: 0.08em;
+.app-placeholder p:last-child {
+  max-width: 520px;
+  margin: 1.25rem auto 0;
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.7;
 }
