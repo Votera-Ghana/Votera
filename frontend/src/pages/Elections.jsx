@@ -1,4 +1,5 @@
 import "./Elections.css";
+import ElectionCard from "../components/ElectionCard/ElectionCard";
 
 function Elections() {
   const elections = [
@@ -65,34 +66,10 @@ function Elections() {
 
         <div className="elections-grid">
           {elections.map((election) => (
-            <article
-              className="election-card"
+            <ElectionCard
               key={election.id}
-            >
-              <div className="election-card-top">
-                <span
-                  className={`election-status ${election.status.toLowerCase()}`}
-                >
-                  <span className="status-dot"></span>
-                  {election.status}
-                </span>
-              </div>
-
-              <div className="election-card-content">
-                <span className="election-organization">
-                  {election.organization}
-                </span>
-
-                <h3>{election.title}</h3>
-
-                <p>{election.description}</p>
-              </div>
-
-              <button className="election-button">
-                View Election
-                <span>→</span>
-              </button>
-            </article>
+              election={election}
+            />
           ))}
         </div>
       </section>
