@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from app.api.admin import router as admin_router
 from app.api.auth import router as auth_router
+from app.api.elections import router as elections_router
 
 app = FastAPI(
     title="Votera API",
@@ -11,6 +12,7 @@ app = FastAPI(
 
 app.include_router(auth_router)
 app.include_router(admin_router)
+app.include_router(elections_router)
 
 
 @app.get("/api/health")
