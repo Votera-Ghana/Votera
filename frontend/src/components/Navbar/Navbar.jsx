@@ -21,7 +21,7 @@ function Navbar() {
             Home
           </a>
 
-          <a href="#elections" onClick={closeMenu}>
+          <a href="elections" onClick={closeMenu}>
             Elections
           </a>
 
