@@ -35,7 +35,7 @@ function Navbar() {
           </Link>
 
           <Link to="/#how-it-works" onClick={closeMenu}>
-            How It Works
+            Admin
           </Link>
 
           <Link to="/#about" onClick={closeMenu}>
