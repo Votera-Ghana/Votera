@@ -1,4 +1,5 @@
 import "./ElectionCard.css";
+import { Link } from "react-router-dom";
 
 function ElectionCard({ election }) {
   const statusClass = election.status.toLowerCase();
@@ -44,10 +45,13 @@ function ElectionCard({ election }) {
 
       {/* Action */}
       <div className="election-card-action">
-        <button className="election-button">
+        <Link
+          to={`/elections/${election.id}`}
+          className="election-button"
+        >
           View Election
           <span>→</span>
-        </button>
+        </Link>
       </div>
     </article>
   );
