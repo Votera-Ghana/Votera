@@ -1,0 +1,94 @@
+.candidate-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.candidate-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 255, 255, 0.24);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+}
+
+.candidate-card-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.candidate-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.candidate-card-content {
+  padding: 1.25rem;
+}
+
+.candidate-position {
+  display: inline-block;
+  margin-bottom: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.candidate-card-content h4 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.candidate-card-content p {
+  margin: 0.65rem 0 1.2rem;
+  line-height: 1.6;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.candidate-profile-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.07);
+  color: inherit;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.candidate-profile-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.candidate-profile-button span {
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.candidate-profile-button:hover span {
+  transform: translateX(4px);
+}
