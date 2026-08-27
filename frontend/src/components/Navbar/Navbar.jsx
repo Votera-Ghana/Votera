@@ -1,5 +1,8 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+
 import voteraLogo from "../../assets/votera-logo.png";
+
 import "./Navbar.css";
 
 function Navbar() {
@@ -12,47 +15,61 @@ function Navbar() {
   return (
     <header className="navbar">
       <div className="navbar-shell">
-        <a href="#home" className="navbar-brand" onClick={closeMenu}>
+
+        <Link to="/" className="navbar-brand" onClick={closeMenu}>
           <img src={voteraLogo} alt="Votera" />
-        </a>
+        </Link>
 
-        <nav className={`navbar-links ${menuOpen ? "navbar-links-open" : ""}`}>
-          <a href="#home" onClick={closeMenu}>
+        <nav
+          className={`navbar-links ${
+            menuOpen ? "navbar-links-open" : ""
+          }`}
+        >
+
+          <Link to="/" onClick={closeMenu}>
             Home
-          </a>
+          </Link>
 
-          <a href="elections" onClick={closeMenu}>
+          <Link to="/elections" onClick={closeMenu}>
             Elections
-          </a>
+          </Link>
 
-          <a href="#how-it-works" onClick={closeMenu}>
+          <Link to="/#how-it-works" onClick={closeMenu}>
             How It Works
-          </a>
+          </Link>
 
-          <a href="#about" onClick={closeMenu}>
+          <Link to="/#about" onClick={closeMenu}>
             About
-          </a>
+          </Link>
 
-          <a
-            href="#elections"
+          <Link
+            to="/elections"
             className="navbar-action"
             onClick={closeMenu}
           >
             Find an Election
-          </a>
+          </Link>
+
         </nav>
 
         <button
           type="button"
-          className={`navbar-toggle ${menuOpen ? "navbar-toggle-active" : ""}`}
+          className={`navbar-toggle ${
+            menuOpen ? "navbar-toggle-active" : ""
+          }`}
           onClick={() => setMenuOpen(!menuOpen)}
-          aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-label={
+            menuOpen
+              ? "Close navigation menu"
+              : "Open navigation menu"
+          }
           aria-expanded={menuOpen}
         >
           <span />
           <span />
           <span />
         </button>
+
       </div>
     </header>
   );
