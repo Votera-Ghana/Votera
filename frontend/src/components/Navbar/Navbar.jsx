@@ -34,10 +34,10 @@ function Navbar() {
             Elections
           </Link>
 
-          <Link to="/#how-it-works" onClick={closeMenu}>
+          <Link to="/admin/login" onClick={closeMenu}>
             Admin
           </Link>
-
+          
           <Link to="/#about" onClick={closeMenu}>
             About
           </Link>
