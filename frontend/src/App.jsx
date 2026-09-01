@@ -4,14 +4,17 @@ import Home from "./pages/Home";
 import Elections from "./pages/Elections";
 import ElectionDetails from "./pages/ElectionDetails";
 import CandidateDetails from "./pages/CandidateDetails";
-
 import Layout from "./components/Layout/Layout";
-import AdminLayout from "./components/AdminLayout/AdminLayout";
+import AdminLogin from "./pages/AdminLogin/AdminLogin";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import ElectionManagement from "./pages/Admin/ElectionManagement";
+import PositionsManagement from "./pages/Admin/PositionsManagement";
+import AdminCandidates from "./pages/AdminCandidates/AdminCandidates";
+import AdminVoters from "./pages/AdminVoters/AdminVoters";
 
 function App() {
   return (
     <BrowserRouter>
-
       <Routes>
 
         {/* =========================
@@ -44,58 +47,41 @@ function App() {
 
 
         {/* =========================
-            ADMIN PANEL
+            ADMIN
         ========================== */}
 
         <Route
+          path="/admin/login"
+          element={<AdminLogin />}
+        />
+
+        <Route
           path="/admin/election/:electionId"
-          element={<AdminLayout />}
-        >
+          element={<AdminDashboard />}
+        />
 
-          <Route
-            index
-            element={<div>Admin Overview</div>}
-          />
+        <Route
+          path="/admin/election/:electionId/election"
+          element={<ElectionManagement />}
+        />
 
-          <Route
-            path="election"
-            element={<div>Election Management</div>}
-          />
+        <Route
+            path="/admin/election/:electionId/positions"
+          element={<PositionsManagement />}
+        />
 
-          <Route
-            path="positions"
-            element={<div>Positions Management</div>}
-          />
+        <Route
+          path="/admin/election/:electionId/candidates"
+          element={<AdminCandidates />}
+        />
 
-          <Route
-            path="candidates"
-            element={<div>Candidates Management</div>}
-          />
+        <Route
+          path="/admin/election/:electionId/voters"
+          element={<AdminVoters />}
+        />
 
-          <Route
-            path="voters"
-            element={<div>Voters Management</div>}
-          />
-
-          <Route
-            path="transactions"
-            element={<div>Transactions</div>}
-          />
-
-          <Route
-            path="results"
-            element={<div>Election Results</div>}
-          />
-
-          <Route
-            path="settings"
-            element={<div>Election Settings</div>}
-          />
-
-        </Route>
-
+        
       </Routes>
-
     </BrowserRouter>
   );
 }
